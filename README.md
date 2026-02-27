@@ -1,24 +1,46 @@
-# README
+# Project Conversation History (Rails)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This app implements a Project conversation history where a user can:
+- leave a comment
+- change the status of the project
+- view a combined timeline of both comment events and status-change events
 
-Things you may want to cover:
+## Assumptions & Questions (and expected answers)
 
-* Ruby version
+1) What statuses are allowed?
+- Assumed: a fixed list: `new`, `in_progress`, `blocked`, `done`.
 
-* System dependencies
+2) Who can comment / change status?
+- Assumed: any authenticated user.
 
-* Configuration
+3) Should status changes show from → to?
+- Assumed: yes, the timeline records previous + new status.
 
-* Database creation
+4) Can comments/statuses be edited/deleted?
+- Assumed: no, only creation is required for this task.
 
-* Database initialization
+## Design
 
-* How to run the test suite
+### Conversation History Modeling
+A single timeline is implemented using STI:
+- `ConversationItem` (base)
+  - `CommentItem`
+  - `StatusChangeItem`
 
-* Services (job queues, cache servers, search engines, etc.)
+This allows one feed ordered by `created_at` while supporting multiple event types.
 
-* Deployment instructions
+### Status Changes
+Status changes are executed via a dedicated action and always write a `StatusChangeItem` entry.
 
-* ...
+## Setup
+
+### Requirements
+- Ruby: 4.0.1
+- Rails: 8.1.2
+- Database: PostgreSQL
+
+### Install
+```bash
+bundle install
+bin/rails db:create db:migrate db:seed
+bin/rails server
