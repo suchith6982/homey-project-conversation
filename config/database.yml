@@ -85,5 +85,15 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  adapter: postgresql
-  url: <%= ENV.fetch("DATABASE_URL") %>
+  primary:
+    adapter: postgresql
+    url: <%= ENV.fetch("DATABASE_URL") %>
+
+  cache:
+    <<: *primary
+
+  queue:
+    <<: *primary
+
+  cable:
+    <<: *primary
