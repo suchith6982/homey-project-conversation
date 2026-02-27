@@ -1,0 +1,21 @@
+<%= form_with(model: project) do |form| %>
+  <% if project.errors.any? %>
+    <div class="card" style="border-color:#fecaca; background:#fff1f2;">
+      <strong><%= pluralize(project.errors.count, "error") %> prevented saving:</strong>
+      <ul>
+        <% project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field" style="min-width: 100%;">
+    <%= form.label :name, class: "muted" %>
+    <%= form.text_field :name, placeholder: "e.g. Suchith’s home project" %>
+  </div>
+
+  <div style="margin-top: 14px;">
+    <%= form.submit class: "btn" %>
+  </div>
+<% end %>

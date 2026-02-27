@@ -1,0 +1,36 @@
+<div class="container">
+  <% if notice.present? %>
+    <div class="card"><%= notice %></div>
+  <% end %>
+
+  <div class="header-row" style="margin-bottom: 16px;">
+    <h1 style="margin: 0;">Projects</h1>
+    <%= link_to "New project", new_project_path, class: "btn" %>
+  </div>
+
+  <% @projects.each do |project| %>
+    <div class="card">
+      <div class="header-row">
+        <div>
+          <h3 style="margin:0;"><%= project.name %></h3>
+          <div class="muted" style="margin-top:6px;">
+            Status:
+            <span class="<%= status_badge_class(project.status) %>">
+              <%= project.status.humanize %>
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <%= link_to "Open", project_path(project), class: "btn btn-secondary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @projects.empty? %>
+    <div class="card">
+      <p class="muted" style="margin:0;">No projects yet. Create your first one.</p>
+    </div>
+  <% end %>
+</div>

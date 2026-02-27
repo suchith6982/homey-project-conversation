@@ -1,0 +1,80 @@
+<div class="container">
+  <% if notice.present? %>
+    <div class="card"><%= notice %></div>
+  <% end %>
+
+  <div class="card">
+    <div class="header-row">
+      <div>
+        <h2 style="margin:0;"><%= @project.name %></h2>
+        <div class="muted" style="margin-top:6px;">
+          Current status:
+          <span class="<%= status_badge_class(@project.status) %>"><%= @project.status.humanize %></span>
+        </div>
+      </div>
+
+      <div>
+        <%= link_to "Back", projects_path, class: "btn btn-secondary" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Update status</h3>
+
+    <%= form_with url: project_status_changes_path(@project), local: true do |f| %>
+      <div class="form-row">
+        <div class="field">
+          <label class="muted">New status</label>
+          <%= fields_for :status_change do |sc| %>
+            <%= sc.select :to_status, Project::STATUSES.map { |s| [s.humanize, s] }, selected: @project.status %>
+          <% end %>
+        </div>
+        <%= f.submit "Update", class: "btn" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Leave a comment</h3>
+
+    <%= form_with url: project_comments_path(@project), local: true do |f| %>
+      <div class="field" style="min-width:100%;">
+        <%= fields_for :comment do |c| %>
+          <%= c.text_area :body, rows: 3, placeholder: "Write a comment..." %>
+        <% end %>
+      </div>
+      <%= f.submit "Add comment", class: "btn" %>
+    <% end %>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Conversation history</h3>
+
+    <% if @conversation_items.any? %>
+      <ul class="timeline">
+        <% @conversation_items.each do |item| %>
+          <li class="timeline-item">
+            <div class="timeline-title">
+              <strong><%= item.user.email %></strong>
+              <span class="muted"><%= item.created_at.strftime("%Y-%m-%d %H:%M") %></span>
+            </div>
+
+            <% if item.is_a?(CommentItem) %>
+              <div>💬 <%= item.body %></div>
+            <% elsif item.is_a?(StatusChangeItem) %>
+              <div>
+                🔁 Status changed from
+                <span class="<%= status_badge_class(item.from_status) %>"><%= item.from_status.humanize %></span>
+                to
+                <span class="<%= status_badge_class(item.to_status) %>"><%= item.to_status.humanize %></span>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="muted">No activity yet.</p>
+    <% end %>
+  </div>
+</div>
