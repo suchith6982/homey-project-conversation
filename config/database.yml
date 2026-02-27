@@ -72,8 +72,8 @@ test:
 # the values provided in this file. Alternatively, you can specify a connection
 # URL environment variable explicitly:
 #
-production:
-  url: <%= ENV["DATABASE_URL"] %>
+# production:
+#  url: <%= ENV["DATABASE_URL"] %>
 #
 # Connection URLs for non-primary databases can also be configured using
 # environment variables. The variable name is formed by concatenating the
@@ -85,20 +85,5 @@ production:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  primary: &primary_production
-    <<: *default
-    database: project_history_production
-    username: project_history
-    password: <%= ENV["PROJECT_HISTORY_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: project_history_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: project_history_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: project_history_production_cable
-    migrations_paths: db/cable_migrate
+  adapter: postgresql
+  url: <%= ENV.fetch("DATABASE_URL") %>
